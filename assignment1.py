@@ -155,7 +155,7 @@ def is_sorted(arr: StaticArray) -> int:
     # Compares each element with the one after it to check for descending order
     elif arr.get(0) > arr.get(length):
         for index in range(length):
-            if arr.get(index + 1) > arr.get(index):
+            if arr.get(index + 1) >= arr.get(index):
                 return 0
         return 2
 
@@ -189,14 +189,14 @@ def sa_sort(arr: StaticArray) -> None:  # Need to fix
 
         max_pos = (length - 1) - iteration_count
 
-        if arr[iteration_count] != min:
-            if arr[min_old_index] != max:
+        if arr[iteration_count] != min: # checks that min will not be overwritten
+            if arr[min_old_index] != max and min_old_index > iteration_count:
                 arr[min_old_index] = arr[iteration_count]
             else:
                 arr[max_old_index] = arr[iteration_count]
             arr[iteration_count] = min
         if arr[max_pos] != max:
-            if arr[max_old_index] != min:
+            if arr[max_old_index] != min and max_old_index < max_pos:
                 arr[max_old_index] = arr[max_pos]
             else:
                 arr[min_old_index] = arr[max_pos]
@@ -528,19 +528,33 @@ def transform_string(source: str, s1: str, s2: str) -> str:
     TODO: Write this implementation
     """
     new_string = ""
-    for index in range(len(source)):
+
+    # convert source string to an array
+    source_array = StaticArray(len(source))
+    for index in range(source_array.size()):
+        source_array.set(index, source[index])
+
+    # if character in s1, then replace character in source array
+    for index in range(len(s2)):
         char = source[index]
         if char in s1:
-            source = s2[index]
+            source_array[index] = s2[index]
+
+    # convert new source array back to source string
+    source = ""
+    for index in range(source_array.size()):
+        source += source_array[index]
+
+    # build new_string
+    for char in source:
+        if char.isupper():
+            new_string += " "
+        elif char.islower():
+            new_string += "#"
+        elif char.isdigit():
+            new_string += "!"
         else:
-            if char.isupper():
-                new_string += " "
-            elif char.islower():
-                new_string += "#"
-            elif char.isdigit():
-                new_string += "!"
-            else:
-                new_string += "="
+            new_string += "="
 
     return new_string
 
