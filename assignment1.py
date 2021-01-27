@@ -72,18 +72,15 @@ def reverse(arr: StaticArray) -> None:
     Reverses the order of elements in an array.
     """
     # Sets the length as an integer of half the size of the array.
-    if (arr.size() % 2) == 0:
-        length = int(arr.size() / 2)
-    else:
-        length = int((arr.size() / 2) - 1)
+    length = int(arr.size() / 2)
 
-    for i in range(length):
+    for index in range(length):
         # Gets the first and last unsorted elements
-        beginning = arr.get(i)
-        end = arr.get((arr.size() - 1) - i)
+        beginning = arr.get(index)
+        end = arr.get((arr.size() - 1) - index)
         # Swaps the first and last unsorted elements
-        arr.set(i, end)
-        arr.set((arr.size() - 1) - i, beginning)
+        arr.set(index, end)
+        arr.set((arr.size() - 1) - index, beginning)
 
 
 # ------------------- PROBLEM 4 - ROTATE ------------------------------------
@@ -143,17 +140,25 @@ def is_sorted(arr: StaticArray) -> int:
     Checks if an array is sorted
     """
     length = arr.size() - 1
-    # Compares each element with the one after it
-    if arr.get(length) > arr.get(0):
-        for i in range(length):
-            if arr.get(i) > arr.get(i + 1):
+
+    # If only one element in the array
+    if arr.size() == 1:
+        return 1
+
+    # Compares each element with the one after it to check for ascending order
+    elif arr.get(length) > arr.get(0):
+        for index in range(length):
+            if arr.get(index) >= arr.get(index + 1):
                 return 0
         return 1
+
+    # Compares each element with the one after it to check for descending order
     elif arr.get(0) > arr.get(length):
-        for i in range(length):
-            if arr.get(i + 1) > arr.get(i):
+        for index in range(length):
+            if arr.get(index + 1) > arr.get(index):
                 return 0
         return 2
+
     else:
         return 0
 
@@ -438,17 +443,16 @@ def add_numbers(arr1: StaticArray, arr2: StaticArray) -> StaticArray:
     """
     num_1 = 0
     num_2 = 0
-    length_1 = arr1.size() - 1
-    length_2 = arr2.size() - 1
+    length_1 = arr1.size()
+    length_2 = arr2.size()
 
-    for i in range(arr1.size()):
-        num_1 += arr1[i] * (10 ** (length_1 - i))
-    for i in range(arr2.size()):
-        num_2 += arr2[i] * (10 ** (length_2 - i))
+    for index in range(arr1.size()):
+        num_1 += arr1[index] * (10 ** (length_1 - index))
+    for index in range(arr2.size()):
+        num_2 += arr2[index] * (10 ** (length_2 - index))
 
     result = num_1 + num_2
 
-    result_arr = []
     if length_1 > length_2:
         length = length_1
     else:
@@ -459,6 +463,12 @@ def add_numbers(arr1: StaticArray, arr2: StaticArray) -> StaticArray:
     while result > 0:
         num_3 = result / (10 ** length)
         if num_3 > 10:
+            working_arr = StaticArray(result_arr.size() + 1)
+            for index in range(result_arr.size()):
+                working_arr.set(index, result_arr[index])
+            result_arr = StaticArray(working_arr.size())
+            for index in range(working_arr.size()):
+                result_arr.set(index, working_arr[index])
             num_3 /= 10
             length += 1
         num_3 = int(num_3)
@@ -478,9 +488,10 @@ def balanced_strings(s: str) -> StaticArray:
     """
     TODO: Write this implementation
     """
+    working_array = StaticArray(len(s))
+    working_array_index = 0
     a_count = b_count = c_count = 0
     new_s = ""
-    results = []
     for char in s:
         if char.lower() == "a":
             new_s += char
@@ -493,10 +504,20 @@ def balanced_strings(s: str) -> StaticArray:
             c_count += 1
 
         if a_count == b_count == c_count:
-            results.append(new_s)
+            working_array.set(working_array_index, new_s)
+            working_array_index += 1
             new_s = ""
 
-    return results
+    result_length = 0
+    for index in range(working_array.size()):
+        if working_array[index] is not None:
+            result_length += 1
+
+    result_array = StaticArray(result_length)
+    for index in range(result_array.size()):
+        result_array.set(index, working_array[index])
+
+    return result_array
 
 
 # ------------------- PROBLEM 14 - TRANSFORM_STRING -------------------------
@@ -507,15 +528,16 @@ def transform_string(source: str, s1: str, s2: str) -> str:
     TODO: Write this implementation
     """
     new_string = ""
-    for i in range(len(source)):
-        if source[i] in s1:
-            new_string += s2[i]
+    for index in range(len(source)):
+        char = source[index]
+        if char in s1:
+            source = s2[index]
         else:
-            if source[i].isUpper():
-                new_string += ""
-            elif source[i].isLower():
+            if char.isupper():
+                new_string += " "
+            elif char.islower():
                 new_string += "#"
-            elif source[i] in 1234567890:
+            elif char.isdigit():
                 new_string += "!"
             else:
                 new_string += "="
