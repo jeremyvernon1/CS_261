@@ -262,10 +262,12 @@ def count_sort(arr: StaticArray) -> StaticArray:
     count_pos = StaticArray(max)
     count_neg = StaticArray(max)
 
-    # records the number of iterations of an array element by setting the corresponding index position of the count array to the number of iterations
-    # positive numbers
+    # records the number of iterations of an array element
+    # by setting the corresponding index position of the count array to the number of iterations
     for index in range(arr.size()):
         current = arr[index]
+
+        # positive numbers
         if current > 0:
             if count_pos[current] == None:
                 count_pos.set(current, 1)
@@ -285,7 +287,6 @@ def count_sort(arr: StaticArray) -> StaticArray:
                 count_neg.set(abs(current), 1)
             else:
                 count_neg[abs(current)] += 1
-            count_neg.set(abs(current), 1)
 
     # sums non-empty spaces and sets empty spaces equal to zero
     length = 0
@@ -464,7 +465,7 @@ def add_numbers(arr1: StaticArray, arr2: StaticArray) -> StaticArray:
     result_arr_index = 0
     while result > 0:
         num_3 = result / (10 ** length)
-        if num_3 > 10:
+        if num_3 >= 10:
             working_arr = StaticArray(result_arr.size() + 1)
             for index in range(result_arr.size()):
                 working_arr.set(index, result_arr[index])
