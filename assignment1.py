@@ -177,6 +177,8 @@ def sa_sort(arr: StaticArray) -> None:  # Need to fix
     while iteration_count < (length / 2):
         min = arr[iteration_count]
         max = arr[iteration_count]
+        min_old_index = iteration_count
+        max_old_index = iteration_count
 
         for index in range(iteration_count, (length - iteration_count)):
 
@@ -636,6 +638,8 @@ if __name__ == "__main__":
         [1, 10, 2, 20, 3, 30, 4, 40, 5],
         ['zebra2', 'apple', 'tomato', 'apple', 'zebra1'],
         [(1, 1), (20, 1), (1, 20), (2, 20)],
+        [741, 827, 993, 573, -213, 837, 405],
+        [-159, -323, 357, -536, -246, -335, -1, 751, -968, -970, 386],
         [random.randrange(-30000, 30000) for _ in range(5_000)]
     )
     for case in test_cases:
