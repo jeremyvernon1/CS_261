@@ -166,20 +166,20 @@ def is_sorted(arr: StaticArray) -> int:
 # ------------------- PROBLEM 7 - SA_SORT -----------------------------------
 
 
-def sa_sort(arr: StaticArray) -> None:  # Need to fix
+def sa_sort(arr: StaticArray) -> None:
     """
-    TODO: Write this implementation
+    sorts an array in ascending order
     """
     length = arr.size()
     iteration_count = 0
-    min_old_index = 0
-    max_old_index = 0
     while iteration_count < (length / 2):
+        # sets default values to the next first element
         min = arr[iteration_count]
         max = arr[iteration_count]
         min_old_index = iteration_count
         max_old_index = iteration_count
 
+        # loops through the array to find the smallest and largest elements
         for index in range(iteration_count, (length - iteration_count)):
 
             if arr[index] < min:
@@ -189,18 +189,25 @@ def sa_sort(arr: StaticArray) -> None:  # Need to fix
                 max = arr[index]
                 max_old_index = index
 
-        max_pos = (length - 1) - iteration_count
+        max_pos = (length - 1) - iteration_count # sets index for next last position
 
-        if arr[iteration_count] != min:  # checks that min will not be overwritten
+        # checks that previously sorted values will not be overwritten
+        if arr[iteration_count] != min:
             if arr[min_old_index] != max and min_old_index > iteration_count:
+                # swaps min and element where min was
                 arr[min_old_index] = arr[iteration_count]
             else:
+                # if swapping would overwrite, then places old value where max was
                 arr[max_old_index] = arr[iteration_count]
+            # sets smallest value at the next first position
             arr[iteration_count] = min
+        # checks that previously sorted values will not be overwritten
         if arr[max_pos] != max:
             if arr[max_old_index] != min and max_old_index < max_pos:
+                # swaps max and element where max was
                 arr[max_old_index] = arr[max_pos]
             else:
+                # if swapping would overwrite, then places old value where min was
                 arr[min_old_index] = arr[max_pos]
             arr[max_pos] = max
 
@@ -212,34 +219,32 @@ def sa_sort(arr: StaticArray) -> None:  # Need to fix
 
 def remove_duplicates(arr: StaticArray) -> StaticArray:
     """
-    TODO: Write this implementation
+    removes duplicates from a sorted array
     """
-
     length = arr.size()
     working_array = StaticArray(length)
-    working_array.set(0, arr[0])
+    working_array.set(0, arr.get(0))
+    # loops to check if the next element is equal to the current element
     for index in range(1, length):
-        if arr[index] != arr[index - 1]:
-            working_array.set(index, arr[index])
+        if arr.get(index) != arr.get(index - 1):
+            # if not equal, then record the resulting element
+            working_array.set(index, arr.get(index))
 
+    # determines the size of the result array
     count = 0
-    if working_array.size() == 1:
-        count = 1
-    else:
-        for index in range(working_array.size()):
-            if working_array[index] != None:
-                count += 1
+    for index in range(working_array.size()):
+        if working_array.get(index) != None:
+            count += 1
+    # creates an array for the results
     new_array = StaticArray(count)
 
-    new_array_index = 0
+    # inputs non-empty results into the new array
+    new_array_index = 0 # keeps track of the next open pos in the result array
+    for index in range(working_array.size()):
+        if working_array.get(index) != None:
+            new_array.set(new_array_index, working_array[index])
+            new_array_index += 1
 
-    if working_array.size() == 1:
-        new_array.set(0, working_array[0])
-    else:
-        for index in range(working_array.size()):
-            if working_array[index] != None:
-                new_array.set(new_array_index, working_array[index])
-                new_array_index += 1
     return new_array
 
 
@@ -248,7 +253,7 @@ def remove_duplicates(arr: StaticArray) -> StaticArray:
 
 def count_sort(arr: StaticArray) -> StaticArray:
     """
-    TODO: Write this implementation
+    counts the number of instances that an element appears, then creates a sorted array
     """
     # finds the maximum element
     max = arr[0]
@@ -393,12 +398,12 @@ def sa_intersection(arr1: StaticArray, arr2: StaticArray, arr3: StaticArray) \
 
 def sorted_squares(arr: StaticArray) -> StaticArray:
     """
-    TODO: Write this implementation
+    sorts the array in ascending order, then squares the results
     """
 
     def count_sort_ascending(arr: StaticArray) -> StaticArray:
         """
-        TODO: Write this implementation
+        counts the number of instances that an element appears, then creates a sorted array
         """
         # finds the maximum element
         max = arr[0]
@@ -448,8 +453,11 @@ def sorted_squares(arr: StaticArray) -> StaticArray:
                 count_pos[index] -= 1
 
         return result_array
+        # end count_sort_ascending function declaration
 
+    # creates a result array and runs count_sort_ascending on array to sort
     result_array = count_sort_ascending(arr)
+    # squares the results
     for index in range(result_array.size()):
         result_array[index] **= 2
 
@@ -461,32 +469,37 @@ def sorted_squares(arr: StaticArray) -> StaticArray:
 
 def add_numbers(arr1: StaticArray, arr2: StaticArray) -> StaticArray:
     """
-    TODO: Write this implementation
+    receives two arrays, converts the elements in the array to a single number each;
+    returns a new array with the sum of the two numbers
     """
     num_1 = 0
     num_2 = 0
     length_1 = arr1.size()
     length_2 = arr2.size()
 
+    # converts each array to a single number
     for index in range(arr1.size()):
         num_1 += arr1[index] * (10 ** (length_1 - index))
     for index in range(arr2.size()):
         num_2 += arr2[index] * (10 ** (length_2 - index))
-
     result = num_1 + num_2
 
+    # sets the length equal to the largest array
     if length_1 > length_2:
         length = length_1
     else:
         length = length_2
 
+    # creates a result array
     result_arr = StaticArray(length)
-    result_arr_index = 0
+    result_arr_index = 0 # keep track of the next open position
+    # loops to constantly divide the resulting sum by 10 to break the sum into individual digit elements
     while result > 0:
         num_3 = result / (10 ** length)
-        if num_3 % 10 == 0:
+        if num_3 == 10:
             num_3 = 0
-        elif num_3 >= 10:
+        elif num_3 > 10:
+            # if element overflows, creates a new temp array to transfer to the new result array
             working_arr = StaticArray(result_arr.size() + 1)
             for index in range(result_arr.size()):
                 working_arr.set(index, result_arr[index])
@@ -494,14 +507,17 @@ def add_numbers(arr1: StaticArray, arr2: StaticArray) -> StaticArray:
             for index in range(working_arr.size()):
                 result_arr.set(index, working_arr[index])
             num_3 /= 10
-            length += 1
+            length += 1 # increases the base position to account for > 10
+        # records resulting element in result array
         num_3 = int(num_3)
         result_arr.set(result_arr_index, num_3)
         result_arr_index += 1
+        # reduces the sum by the amount taken out
         num_4 = num_3 * (10 ** length)
         result -= num_4
-        length -= 1
+        length -= 1 # decreases the base position
 
+    # replaces None values with zeros
     for index in range(result_arr.size()):
         if result_arr[index] == None:
             result_arr.set(index, 0)
@@ -514,12 +530,15 @@ def add_numbers(arr1: StaticArray, arr2: StaticArray) -> StaticArray:
 
 def balanced_strings(s: str) -> StaticArray:
     """
-    TODO: Write this implementation
+    finds equal iterations of 'a,' 'b,' and 'c'
     """
+    # create a temporary array to store each of the results as they are found
     working_array = StaticArray(len(s))
+
     working_array_index = 0
     a_count = b_count = c_count = 0
     new_s = ""
+    # loops through the string and counts instances of 'a,' 'b,' and 'c'
     for char in s:
         if char.lower() == "a":
             new_s += char
@@ -531,16 +550,20 @@ def balanced_strings(s: str) -> StaticArray:
             new_s += char
             c_count += 1
 
+        # checks to see if instance counts are equal
         if a_count == b_count == c_count:
+            # stores result
             working_array.set(working_array_index, new_s)
             working_array_index += 1
             new_s = ""
 
+    # counts how many elements were found
     result_length = 0
     for index in range(working_array.size()):
         if working_array[index] is not None:
             result_length += 1
 
+    # creates a result array and transfers the resulting elements in
     result_array = StaticArray(result_length)
     for index in range(result_array.size()):
         result_array.set(index, working_array[index])
@@ -553,17 +576,22 @@ def balanced_strings(s: str) -> StaticArray:
 
 def transform_string(source: str, s1: str, s2: str) -> str:
     """
-    TODO: Write this implementation
+    Transforms strings to reveal the hidden message
     """
 
     # build new_string
     new_string = ""
+    # loops through the source string
     for index in range(len(source)):
         char = source[index]
+        # if character in s1,
+        # replaces source character with the character in s2,
+        # which has the same index where character was found in s1
         if char in s1:
             for index in range(len(s1)):
                 if s1[index] == char:
                     new_string += s2[index]
+        # if charater not in s1, decode
         else:
             if char.isupper():
                 new_string += " "
