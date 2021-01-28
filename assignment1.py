@@ -337,31 +337,39 @@ def sa_intersection(arr1: StaticArray, arr2: StaticArray, arr3: StaticArray) \
     # creates an array to keep track of common elements in arr1 and arr2
     working_array_1 = StaticArray(arr1.size())
     # creates a temp array so that seen elements can be "removed"
-    temp_array = StaticArray(arr2.size())
+    working_array_2 = StaticArray(arr2.size())
     for index in range(arr2.size()):
-        temp_array.set(index, arr2[index])
+        working_array_2.set(index, arr2[index])
     length = 0
 
-    # finds elements that match in both arr1 and temp_array(arr2)
+    # finds elements that match in both arr1 and working_array_2(arr2)
     for index1 in range(arr1.size()):
-        for index2 in range(temp_array.size()):
-            if arr1[index1] == temp_array[index2]:
+        for index2 in range(working_array_2.size()):
+            if arr1[index1] == working_array_2[index2]:
                 working_array_1.set(length, arr1[index1])
-                temp_array[index2] = None
+                working_array_2[index2] = None
                 length += 1
                 break  # if element is found, discontinue search
 
     # if no matches, returns None
     if length == 0:
         results_array = StaticArray(1)
-    # finds elements that match in both temp_array(arr2) and arr3
+
     else:
-        working_array_2 = StaticArray(arr3.size())
+        # creates an array that truncates working array to just the results
+        # gets rid of None values that might be compared
+        working_array_3 = StaticArray(length)
+        for index in range(working_array_3.size()):
+            working_array_3.set(index, working_array_1[index])
+        working_array_4 = StaticArray(arr3.size())
         length = 0
+
+        # finds elements that match in both working_array_3(arr2) and arr3
         for index3 in range(arr3.size()):
-            for index4 in range(working_array_1.size()):
-                if working_array_1[index4] == arr3[index3]:
-                    working_array_2.set(length, arr3[index3])
+            for index4 in range(working_array_3.size()):
+                if working_array_3[index4] == arr3[index3]:
+                    working_array_4.set(length, arr3[index3])
+                    working_array_3.set(index4, None)
                     length += 1
                     break  # if element is found, discontinue search
 
@@ -372,9 +380,9 @@ def sa_intersection(arr1: StaticArray, arr2: StaticArray, arr3: StaticArray) \
         else:
             results_array = StaticArray(length)
             results_array_index = 0
-            for index5 in range(working_array_2.size()):
-                if working_array_2[index5] != None:
-                    results_array.set(results_array_index, working_array_2[index5])
+            for index5 in range(working_array_4.size()):
+                if working_array_4[index5] != None:
+                    results_array.set(results_array_index, working_array_4[index5])
                     results_array_index += 1
 
     return results_array
