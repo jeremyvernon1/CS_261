@@ -333,31 +333,44 @@ def count_sort(arr: StaticArray) -> StaticArray:
 def sa_intersection(arr1: StaticArray, arr2: StaticArray, arr3: StaticArray) \
         -> StaticArray:
     """
-    TODO: Write this implementation
+    Searches 3 given arrays, and finds the elements that are in all 3 arrays.
     """
     working_array_1 = StaticArray(arr1.size())
+    # creates a temp array so that seen elements can be "removed"
+    temp_array = StaticArray(arr2.size())
+    for index in range(arr2.size()):
+      temp_array.set(index, arr2[index])
     length = 0
-    for index1 in range(arr1.size()):
-        for index2 in range(arr2.size()):
-            if arr1[index1] == arr2[index2]:
-                working_array_1.set(length, arr1[index1])
-                length += 1
-                break
 
+    # finds elements that match in both arr1 and temp_array(arr2)
+    for index1 in range(arr1.size()):
+        for index2 in range(temp_array.size()):
+            if arr1[index1] == temp_array[index2]:
+                print("1st pass:", arr1[index1])
+                working_array_1.set(length, arr1[index1])
+                temp_array[index2] = None
+                length += 1
+                break # if element is found, discontinue search
+
+    # if no matches, returns None
     if length == 0:
         results_array = StaticArray(1)
+    # finds elements that match in both temp_array(arr2) and arr3
     else:
         working_array_2 = StaticArray(arr3.size())
         length = 0
         for index3 in range(working_array_1.size()):
             for index4 in range(arr3.size()):
                 if working_array_1[index3] == arr3[index4]:
+                    print("2nd pass:", working_array_1[index3])
                     working_array_2.set(length, arr3[index4])
                     length += 1
-                    break
+                    break # if element is found, discontinue search
 
+        # if no matches, returns None
         if length == 0:
             results_array = StaticArray(1)
+        # creates an array to display the results
         else:
             results_array = StaticArray(length)
             results_array_index = 0
@@ -465,7 +478,9 @@ def add_numbers(arr1: StaticArray, arr2: StaticArray) -> StaticArray:
     result_arr_index = 0
     while result > 0:
         num_3 = result / (10 ** length)
-        if num_3 >= 10:
+        if num_3 % 10 == 0:
+            num_3 = 0
+        elif num_3 >= 10:
             working_arr = StaticArray(result_arr.size() + 1)
             for index in range(result_arr.size()):
                 working_arr.set(index, result_arr[index])
@@ -480,6 +495,10 @@ def add_numbers(arr1: StaticArray, arr2: StaticArray) -> StaticArray:
         num_4 = num_3 * (10 ** length)
         result -= num_4
         length -= 1
+
+    for index in range(result_arr.size()):
+      if result_arr[index] == None:
+        result_arr.set(index, 0)
 
     return result_arr
 
@@ -530,37 +549,26 @@ def transform_string(source: str, s1: str, s2: str) -> str:
     """
     TODO: Write this implementation
     """
-    new_string = ""
-
-    # convert source string to an array
-    source_array = StaticArray(len(source))
-    for index in range(source_array.size()):
-        source_array.set(index, source[index])
-
-    # if character in s1, then replace character in source array
-    for index in range(len(s2)):
-        char = source[index]
-        if char in s1:
-            source_array[index] = s2[index]
-
-    # convert new source array back to source string
-    source = ""
-    for index in range(source_array.size()):
-        source += source_array[index]
 
     # build new_string
-    for char in source:
+    new_string = ""
+    for index in range(len(source)):
+      char = source[index]
+      if char in s1:
+        for index in range(len(s1)):
+          if s1[index] == char:
+            new_string += s2[index]
+      else:
         if char.isupper():
-            new_string += " "
+          new_string += " "
         elif char.islower():
-            new_string += "#"
+          new_string += "#"
         elif char.isdigit():
-            new_string += "!"
+          new_string += "!"
         else:
-            new_string += "="
+          new_string += "="
 
     return new_string
-
 
 # BASIC TESTING
 if __name__ == "__main__":
