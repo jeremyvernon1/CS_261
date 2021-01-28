@@ -20,11 +20,11 @@ def min_max(arr: StaticArray) -> ():
     minimum = arr.get(0)  # sets min to first element
     maximum = arr.get(0)  # sets max to first element
     # iterate over the elements in the array to check for < or >
-    for i in range(arr.size()):
-        if arr[i] < minimum:  # if element is less than the current min, min = new element
-            minimum = arr[i]
-        elif arr[i] > maximum:  # if element is greater than the current max, max = new element
-            maximum = arr[i]
+    for index in range(arr.size()):
+        if arr[index] < minimum:  # if element is less than the current min, min = new element
+            minimum = arr[index]
+        elif arr[index] > maximum:  # if element is greater than the current max, max = new element
+            maximum = arr[index]
     return minimum, maximum
 
 
@@ -38,26 +38,26 @@ def fizz_buzz(arr: StaticArray) -> StaticArray:
     If divisible by 5, replaces element with "buzz."
     If divisible by both 3 and 5, replaces element with "fizzbuzz."
     """
-    # create a new array so that original elements are preserved.
+    # creates a new array so that original elements are preserved.
     new_array = StaticArray(arr.size())
-    for i in range(arr.size()):
-        new_array.set(i, arr.get(i))
-    # declare initial variables
+    for index in range(arr.size()):
+        new_array.set(index, arr.get(index))
+    # declares initial variables
     mod_3 = False
     mod_5 = False
-    # iterate to check for divisible by 3 and/or divisible by 5
-    for i in range(arr.size()):
-        if new_array.get(i) % 3 == 0:
+    # iterates to check for divisible by 3 and/or divisible by 5
+    for index in range(arr.size()):
+        if new_array.get(index) % 3 == 0:
             mod_3 = True
-        if new_array.get(i) % 5 == 0:
+        if new_array.get(index) % 5 == 0:
             mod_5 = True
         if mod_3 and mod_5:
-            new_array.set(i, "fizzbuzz")
+            new_array.set(index, "fizzbuzz")
         elif mod_3:
-            new_array.set(i, "fizz")
+            new_array.set(index, "fizz")
         elif mod_5:
-            new_array.set(i, "buzz")
-        # reset checks
+            new_array.set(index, "buzz")
+        # resets checks
         mod_3 = False
         mod_5 = False
 
@@ -91,16 +91,16 @@ def rotate(arr: StaticArray, steps: int) -> StaticArray:
     Shifts elements a certain number of steps.
     """
     length = arr.size()
-    new_array = StaticArray(length) # Creates a new array to preserve original elements
-    for i in range(length):
-        pos = i + steps # Adds steps to index number
-        if pos == length: # If index is 1 more than last index, change to first index
+    new_array = StaticArray(length)  # Creates a new array to preserve original elements
+    for index in range(length):
+        pos = index + steps  # Adds steps to index number
+        if pos == length:  # If index is 1 more than last index, change to first index
             pos = 0
-        while pos > (length - 1): # If index is greater than the range, subtract by size of array
+        while pos > (length - 1):  # If index is greater than the range, subtract by size of array
             pos -= length
-        while pos < 0: # If index is less than the range, add by size of array
+        while pos < 0:  # If index is less than the range, add by size of array
             pos += length
-        new_array.set(pos, arr.get(i)) # Set position
+        new_array.set(pos, arr.get(index))  # Set position
 
     return new_array
 
@@ -112,14 +112,14 @@ def sa_range(start: int, end: int) -> StaticArray:
     """
     Creates an array of consecutive integers.
     """
-    forward = True # Declares variable for direction
+    forward = True  # Declares variable for direction
     # Sets the number of elements to create
     if end > start:
         length = abs((end - start) + 1)
     else:
         length = abs((start - end) + 1)
         forward = False
-    arr = StaticArray(length) # Creates a length n array
+    arr = StaticArray(length)  # Creates a length n array
 
     # Fills array with consecutive integers
     for index in range(length):
@@ -191,7 +191,7 @@ def sa_sort(arr: StaticArray) -> None:  # Need to fix
 
         max_pos = (length - 1) - iteration_count
 
-        if arr[iteration_count] != min: # checks that min will not be overwritten
+        if arr[iteration_count] != min:  # checks that min will not be overwritten
             if arr[min_old_index] != max and min_old_index > iteration_count:
                 arr[min_old_index] = arr[iteration_count]
             else:
@@ -221,7 +221,6 @@ def remove_duplicates(arr: StaticArray) -> StaticArray:
     for index in range(1, length):
         if arr[index] != arr[index - 1]:
             working_array.set(index, arr[index])
-
 
     count = 0
     if working_array.size() == 1:
@@ -335,22 +334,22 @@ def sa_intersection(arr1: StaticArray, arr2: StaticArray, arr3: StaticArray) \
     """
     Searches 3 given arrays, and finds the elements that are in all 3 arrays.
     """
+    # creates an array to keep track of common elements in arr1 and arr2
     working_array_1 = StaticArray(arr1.size())
     # creates a temp array so that seen elements can be "removed"
     temp_array = StaticArray(arr2.size())
     for index in range(arr2.size()):
-      temp_array.set(index, arr2[index])
+        temp_array.set(index, arr2[index])
     length = 0
 
     # finds elements that match in both arr1 and temp_array(arr2)
     for index1 in range(arr1.size()):
         for index2 in range(temp_array.size()):
             if arr1[index1] == temp_array[index2]:
-                print("1st pass:", arr1[index1])
                 working_array_1.set(length, arr1[index1])
                 temp_array[index2] = None
                 length += 1
-                break # if element is found, discontinue search
+                break  # if element is found, discontinue search
 
     # if no matches, returns None
     if length == 0:
@@ -359,13 +358,12 @@ def sa_intersection(arr1: StaticArray, arr2: StaticArray, arr3: StaticArray) \
     else:
         working_array_2 = StaticArray(arr3.size())
         length = 0
-        for index3 in range(working_array_1.size()):
-            for index4 in range(arr3.size()):
-                if working_array_1[index3] == arr3[index4]:
-                    print("2nd pass:", working_array_1[index3])
-                    working_array_2.set(length, arr3[index4])
+        for index3 in range(arr3.size()):
+            for index4 in range(working_array_1.size()):
+                if working_array_1[index4] == arr3[index3]:
+                    working_array_2.set(length, arr3[index3])
                     length += 1
-                    break # if element is found, discontinue search
+                    break  # if element is found, discontinue search
 
         # if no matches, returns None
         if length == 0:
@@ -497,8 +495,8 @@ def add_numbers(arr1: StaticArray, arr2: StaticArray) -> StaticArray:
         length -= 1
 
     for index in range(result_arr.size()):
-      if result_arr[index] == None:
-        result_arr.set(index, 0)
+        if result_arr[index] == None:
+            result_arr.set(index, 0)
 
     return result_arr
 
@@ -553,22 +551,23 @@ def transform_string(source: str, s1: str, s2: str) -> str:
     # build new_string
     new_string = ""
     for index in range(len(source)):
-      char = source[index]
-      if char in s1:
-        for index in range(len(s1)):
-          if s1[index] == char:
-            new_string += s2[index]
-      else:
-        if char.isupper():
-          new_string += " "
-        elif char.islower():
-          new_string += "#"
-        elif char.isdigit():
-          new_string += "!"
+        char = source[index]
+        if char in s1:
+            for index in range(len(s1)):
+                if s1[index] == char:
+                    new_string += s2[index]
         else:
-          new_string += "="
+            if char.isupper():
+                new_string += " "
+            elif char.islower():
+                new_string += "#"
+            elif char.isdigit():
+                new_string += "!"
+            else:
+                new_string += "="
 
     return new_string
+
 
 # BASIC TESTING
 if __name__ == "__main__":
